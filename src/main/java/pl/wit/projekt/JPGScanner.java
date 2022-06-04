@@ -69,12 +69,12 @@ public class JPGScanner {
 	        
 	        ArrayList<Path> inMap = this.filesMetadata.get(createdAt);
 	        
-	        if(inMap == null) {
+	        // Sprawdz czy lista juz istnieje, dodaj element, inaczej stworz i dodaj do mapy
+	        if(inMap == null) { 
 	        	inMap = new ArrayList<Path>();
 	        	inMap.add(path);
 	            this.filesMetadata.put(createdAt, inMap);
 	       } else {
-	           // add if item is not already in list
 	           if(!inMap.contains(path)) inMap.add(path);
 	       }
 		});
