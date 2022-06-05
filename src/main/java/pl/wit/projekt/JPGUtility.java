@@ -26,33 +26,30 @@ public class JPGUtility {
 
 	// limit wątków aktywnych w danym momencie czasu
 	private final int threadPoolLimit;
-	// ścieżka do katalogu zródłowego
-	private final Path sourcePath;
 	// ścieżka do katalogu docelowego
 	private final Path targetPath;
 
-	public JPGUtility(int threadPoolLimit, Path sourcePath, Path targetPath) {
+	public JPGUtility(int threadPoolLimit, Path targetPath) {
 		this.threadPoolLimit = threadPoolLimit;
-		this.sourcePath = sourcePath;
 		this.targetPath = targetPath;
 	}
 
 	/**
 	 * Metoda tworząca katalogi na podstawie kluczy mapy oraz kopiująca do nich
-	 * pliki wielowątkowo, nazywając je kolejnymi liczbami całkowitymi iterate over
+	 * pliki wielowątkowo, nazywając je kolejnymi liczbami całkowitymi
 	 *
-	 * @param mapMetaFilenames mapa data utworzenia -> lista nazw plików
+	 * @param mapMetaFilenames mapa data utworzenia -> lista ścieżek do plików
 	 */
-	public void copyFiles(Map<LocalDate, List<String>> mapMetaFilenames) throws IOException {
+	public void copyFiles(Map<LocalDate, List<Path>> mapMetaFilenames) throws IOException {
 		List<Runnable> tasks = new ArrayList<>();
 
 		log.info("Creating directories in " + targetPath);
-		for (LocalDate nameDate : mapMetaFilenames.keySet()) {
-			Path directoryTargetPath = Files.createDirectories(targetPath.resolve(Path.of(nameDate.toString())));
+		for (LocalDate createdAt : mapMetaFilenames.keySet()) {
+			Path directoryTargetPath = Files.createDirectories(targetPath.resolve(Path.of(createdAt.toString())));
 			log.trace("Created empty directory " + directoryTargetPath.toString());
 
-			for (String filename : mapMetaFilenames.get(nameDate)) {
-				tasks.add(new CopyThread(sourcePath.resolve(filename), directoryTargetPath));
+			for (Path filePath : mapMetaFilenames.get(createdAt)) {
+				tasks.add(new CopyThread(filePath, directoryTargetPath));
 			}
 		}
 
