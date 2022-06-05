@@ -1,6 +1,9 @@
 package pl.wit.projekt;
 
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.List;
+import java.util.Map;
 
 public class App {
 	/**
@@ -14,6 +17,11 @@ public class App {
 		String sourcePath = "";
 		String targetPath = "";
 
-		JPGUtility utility = new JPGUtility(threadPool, Path.of(sourcePath), Path.of(targetPath));
+		// flow
+		JPGScanner scanner = new JPGScanner(sourcePath);
+		Map<FileTime, List<Path>> mapa = scanner.getMetadata();
+
+		JPGUtility utility = new JPGUtility(threadPool, Path.of(targetPath));
+		utility.copyFiles(mapa);
 	}
 }
