@@ -1,7 +1,11 @@
 package pl.wit.projekt;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,12 +18,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Klasa testów jednostkowych dla klasy JPGUtility
@@ -32,10 +32,8 @@ public class JPGUtilityTest {
 	protected static final Logger log = LogManager.getLogger(JPGUtilityTest.class.getName());
 	// ścieżka docelowa do kopiowania plików
 	private static Path targetPath;
-	// ścieżka zródłowa do kopiowania plików
-	private static Path sourcePath;
-	// mapa dat utworzenia -> listy nazw plików zdjęciowych
-	private static Map<LocalDate, List<String>> mapMetaFilenames;
+	// mapa dat utworzenia -> listy ścieżek do plików zdjęciowych
+	private static Map<LocalDate, List<Path>> mapMetaFilenames;
 
 	/**
 	 * Metoda usuwająca rekursywnie całą zawartość podanego katalogu
@@ -68,14 +66,14 @@ public class JPGUtilityTest {
 
 		// przypisanie lokalizacji katalogu zródłowego i docelowego
 		targetPath = Path.of(System.getProperty("user.dir")).resolve("src/test/resources/JPGUtilityTest/target");
-		sourcePath = Path.of(System.getProperty("user.dir")).resolve("src/test/resources/JPGUtilityTest/source");
+		// ścieżka zródłowa do kopiowania plików
+		Path sourcePath = Path.of(System.getProperty("user.dir")).resolve("src/test/resources/source");
 
 		// czyszczenie katalogu docelowego
 		cleanDirectory(new File(targetPath.toString()));
 
 		// mapa plików do skopiowania
-		mapMetaFilenames = Map.of(LocalDate.parse("2020-01-01"), Arrays.asList("ex1.jpg", "ex2.jpg"),
-				LocalDate.parse("2020-01-02"), List.of("ex3.jpg"));
+		mapMetaFilenames = Map.of(LocalDate.parse("2022-06-05"), List.of(sourcePath.resolve("ex1.jpg")));
 	}
 
 	/**
@@ -100,7 +98,7 @@ public class JPGUtilityTest {
 
 	@Test
 	public void copyFilesTest() {
-		JPGUtility utility = new JPGUtility(10, sourcePath, targetPath);
+		JPGUtility utility = new JPGUtility(10, targetPath);
 
 		Map<LocalDate, List<String>> expectedResult = new HashMap<>();
 		for (LocalDate key : mapMetaFilenames.keySet()) {
