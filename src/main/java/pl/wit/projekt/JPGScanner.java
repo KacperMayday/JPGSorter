@@ -12,72 +12,75 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class JPGScanner {
-	
-	// Data utworzenia -> Lista nazw plików
-	private Map<FileTime, ArrayList<Path>> filesMetadata;
 
-	public JPGScanner(Path path) throws IOException {
-		// inicjalizacja mapy
+	/**
+	 * 
+	 */
+	private Map<LocalDate, List<Path>> filesMetadata;
+
+	/**
+	 * 
+	 * @param path
+	 * @throws IOException
+	 */
+	public JPGScanner() {
 		filesMetadata = null;
-
-		List<Path> sourceFiles = scanDirectory(path);
-		getMetadata(sourceFiles);
 	}
 
 	/**
-	 * Metoda skanująca katalog w poszukiwaniu plików JPG
+	 * Scans the passed in directory for .jpg files and saves thier creation time to
+	 * a instance Map.
 	 * 
-	 * @param sourcePath
+	 * @param path
+	 * @throws IOException
 	 */
-	private List<Path> scanDirectory(Path path) throws IOException {
-			
-        if (!Files.isDirectory(path)) {
-            throw new IllegalArgumentException("Path must be a directory!");
-        }
+	public void scanDirectory(Path path) throws IOException {
+		List<Path> result;
 
-        List<Path> result;
-        try (Stream<Path> walk = Files.walk(path)) {
-            result = walk
-                    .filter(Files::isRegularFile) // is a file
-                    .filter(p -> p.getFileName().toString().endsWith(".jpg"))
-                    .collect(Collectors.toList());
-        }
-        return result;
-	}
+		try (Stream<Path> walk = Files.walk(path)) {
+			result = walk.filter(Files::isRegularFile) // is a file
+					.filter(p -> p.getFileName().toString().endsWith(".jpg")).collect(Collectors.toList());
+		}
 
-	/**
-	 * Metoda uzupełniająca mapę na podstawie nazw plików i ich metadanych
-	 * 
-	 * @param listFilenames
-	 */
-	private void getMetadata(List<Path> paths) {
-		paths.forEach(path -> {
+		// Loop through each path
+		result.forEach(p -> {
 			BasicFileAttributes attributes = null;
-	        try
-	        {
-	            attributes = Files.readAttributes(path, BasicFileAttributes.class); // zczytanie atrybutow pliku 
-	        }
-	        catch (IOException exception)
-	        {
-	            System.out.println("Exception handled when trying to get file " +
-	                    "attributes: " + exception.getMessage());
-	        }
-	        
-	        FileTime createdAt = attributes.creationTime();
-	        
-	        ArrayList<Path> inMap = this.filesMetadata.get(createdAt);
-	        
-	        // Sprawdz czy lista juz istnieje, dodaj element, inaczej stworz i dodaj do mapy
-	        if(inMap == null) { 
-	        	inMap = new ArrayList<Path>();
-	        	inMap.add(path);
-	            this.filesMetadata.put(createdAt, inMap);
-	       } else {
-	           if(!inMap.contains(path)) inMap.add(path);
-	       }
+			try {
+				// Created basic file attributes
+				attributes = Files.readAttributes(p, BasicFileAttributes.class);
+			} catch (IOException exception) {
+				System.out.println(
+						"Exception handled when trying to get file " + "attributes: " + exception.getMessage());
+			}
+
+			LocalDate createdAt = LocalDateTime.ofInstant(attributes.creationTime().toInstant(), ZoneId.systemDefault())
+					.toLocalDate();
+
+			List<Path> inMap = this.filesMetadata.get(createdAt);
+
+			// Check if the elements already exists, otherwise create it and add it to the map
+			if (inMap == null) {
+				inMap = new ArrayList<Path>();
+				inMap.add(p);
+				this.filesMetadata.put(createdAt, inMap);
+			} else {
+				if (!inMap.contains(p))
+					inMap.add(p);
+			}
 		});
-	
+	}
+
+	/**
+	 * Returns the map containing FileTime associated with file paths
+	 * 
+	 * @return filesMeta instance variable
+	 */
+	public Map<LocalDate, List<Path>> getMetadata() {
+		return this.filesMetadata;
 	}
 }
