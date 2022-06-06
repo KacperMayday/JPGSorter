@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Validator {
-	
+
 	/**
 	 * validate accepts arguments from the command line
 	 * 
@@ -15,38 +15,39 @@ public class Validator {
 	 * 2. Check if the source path exits
 	 * 
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	
+
 	public static void validate(String[] args) {
 		Validator.validateLength(args.length);
 		Validator.validateSourcePath(args[0]);
-		Validator.validateTarget(args[1]);
+		Validator.validateTargetPath(args[1]);
 	}
-	
+
 	public static void validateLength(int size) throws RuntimeException {
 		if (size != 3) {
 			throw new IllegalArgumentException("Please provide three arguments");
 		}
 	}
-	
+
 	public static void validateSourcePath(String path) throws RuntimeException {
 		if (!Files.isDirectory(Paths.get(path))) {
 			throw new IllegalArgumentException("Source path should exit and should be a directory");
 		}
 	}
-	
-	public static void validateTarget(String path) throws RuntimeException {
-		if ( !Files.isDirectory(Paths.get(path))) {
+
+	public static void validateTargetPath(String path) throws RuntimeException{
+		if (!Files.isDirectory(Paths.get(path))) {
 			throw new IllegalArgumentException("Target path should exit");
 		}
-		
+
 		try {
 			if (!Files.list(Paths.get(path)).findAny().isPresent()) {
 				throw new IllegalArgumentException("Target should be a empty directory");
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("error occured: " + e);
+			System.exit(1);
 		}
 	}
 }
