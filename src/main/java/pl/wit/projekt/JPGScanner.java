@@ -2,6 +2,7 @@ package pl.wit.projekt;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class JPGScanner {
 	 * @throws IOException
 	 */
 	public JPGScanner() {
-		filesMetadata = null;
+		filesMetadata =  new HashMap<>();
 	}
 
 	/**
@@ -48,31 +49,40 @@ public class JPGScanner {
 		}
 
 		// Loop through each path
-		result.forEach(p -> {
-			BasicFileAttributes attributes = null;
-			try {
-				// Created basic file attributes
-				attributes = Files.readAttributes(p, BasicFileAttributes.class);
-			} catch (IOException exception) {
-				System.out.println(
-						"Exception handled when trying to get file " + "attributes: " + exception.getMessage());
-			}
 
-			LocalDate createdAt = LocalDateTime.ofInstant(attributes.creationTime().toInstant(), ZoneId.systemDefault())
-					.toLocalDate();
+		if (!result.isEmpty()) {
+			result.forEach(p -> {
+				BasicFileAttributes attributes = null;
+				try {
+					// Created basic file attributes
+					attributes = Files.readAttributes(p, BasicFileAttributes.class);
+				} catch (IOException exception) {
+					System.out.println(
+							"Exception handled when trying to get file " + "attributes: " + exception.getMessage());
+				}
 
-			List<Path> inMap = this.filesMetadata.get(createdAt);
+				LocalDate createdAt = LocalDateTime
+						.ofInstant(attributes.creationTime().toInstant(), ZoneId.systemDefault()).toLocalDate();
+				
 
-			// Check if the elements already exists, otherwise create it and add it to the map
-			if (inMap == null) {
-				inMap = new ArrayList<Path>();
-				inMap.add(p);
-				this.filesMetadata.put(createdAt, inMap);
-			} else {
-				if (!inMap.contains(p))
+				List<Path> inMap = this.filesMetadata.get(createdAt);
+
+				// Check if the elements already exists, otherwise create it and add it to the
+				// map
+				if (inMap == null) {
+					inMap = new ArrayList<Path>();
 					inMap.add(p);
-			}
-		});
+					this.filesMetadata.put(createdAt, inMap);
+				} else {
+					if (!inMap.contains(p))
+						inMap.add(p);
+				}
+			});
+
+			return;
+		}
+
+		throw new IOException();
 	}
 
 	/**
