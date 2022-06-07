@@ -1,7 +1,6 @@
 package pl.wit.projekt;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +9,7 @@ import java.util.stream.Stream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -30,7 +27,7 @@ public class JPGScanner {
 	 * @throws IOException
 	 */
 	public JPGScanner() {
-		filesMetadata =  new HashMap<>();
+		filesMetadata = new HashMap<>();
 	}
 
 	/**
@@ -63,7 +60,6 @@ public class JPGScanner {
 
 				LocalDate createdAt = LocalDateTime
 						.ofInstant(attributes.creationTime().toInstant(), ZoneId.systemDefault()).toLocalDate();
-				
 
 				List<Path> inMap = this.filesMetadata.get(createdAt);
 
