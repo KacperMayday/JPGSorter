@@ -24,7 +24,8 @@ public class App {
 			try {
 				scanner.scanDirectory(sourcePath);
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("error occured while scanning for source files: " + e);
+				System.exit(1);
 			}
 		}
 
@@ -32,7 +33,8 @@ public class App {
 		try {
 			utility.copyFiles(scanner.getMetadata());
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("error occured while copying files from source to target: " + e);
+			System.exit(1);
 		}
 	}
 }
