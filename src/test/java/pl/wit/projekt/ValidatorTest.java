@@ -5,6 +5,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+/**
+ * 
+ * A class used for testing the Validator class
+ * 
+ * @author Jakub Chrupek, 19245
+ *
+ */
 public class ValidatorTest {
 
 	/**
