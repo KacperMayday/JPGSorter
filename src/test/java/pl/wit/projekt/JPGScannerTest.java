@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Class used for testing the functionality of JPGScanner
+ * Klasa do sprawdzenie funkcjonalności JPGScanner
  * 
  * @author Jakub Chrupek, 19245
  *
@@ -19,13 +19,13 @@ import org.junit.rules.TemporaryFolder;
 public class JPGScannerTest {
 
 	/**
-	 * Temp folder for running tests. Gets recreated with each run test.
+	 * Folder tymczasowy używany do testów. Jest odnawiany przed każdym z testów.
 	 */
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	/**
-	 * Ensure that newsly created scanner object has an empty map
+	 * Sprawdzenie iż nowo utworzony obiekt posiada pustą HashMape
 	 */
 	@Test
 	public void testJPGScanner() {
@@ -37,7 +37,7 @@ public class JPGScannerTest {
 	}
 
 	/**
-	 * Check that scanned files are added to the map
+	 * Sprawdzenie iż mapa po zeskanowaniu nie jest pusta
 	 * 
 	 * @throws IOException
 	 */
