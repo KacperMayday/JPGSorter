@@ -7,7 +7,7 @@ import org.junit.rules.TemporaryFolder;
 
 /**
  * 
- * A class used for testing the Validator class
+ * Testy dla sprawdzenie poprawności Validator
  * 
  * @author Jakub Chrupek, 19245
  *
@@ -15,13 +15,13 @@ import org.junit.rules.TemporaryFolder;
 public class ValidatorTest {
 
 	/**
-	 * Temp folder for running tests. Gets recreated with each run test.
+	 * Folder tymczasowy używany do testów. Jest odnawiany przed każdym z testów.
 	 */
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	/**
-	 * Ensure no error with correct number of arguments.
+	 * Przejście dla poprawnej ilości argumentow 
 	 */
 	@Test
 	public void correctLengthTest() {
@@ -31,27 +31,50 @@ public class ValidatorTest {
 	}
 
 	/**
-	 * Ensure correct number of arguments.
+	 * Sprawdzenie błedu podczas zlej ilości - za mało
 	 */
 	@Test(expected = RuntimeException.class)
-	public void wrongLengthTest() {
+	public void wrongLengthLessTest() {
 		String[] args = { "test", "test" };
+
+		Validator.validateLength(args.length);
+	}
+	
+	/**
+	 * Sprawdzenie błedu podczas zlej ilości - za dużo
+	 */
+	@Test(expected = RuntimeException.class)
+	public void wrongLengthMoreTest() {
+		String[] args = { "test", "test", "test", "test" };
 
 		Validator.validateLength(args.length);
 	}
 
 	/**
-	 * Make sure no error is thrown when source exists.
+	 * Test błedu dla pustej ścieżki
+	 * 
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void sourcPathExistsTest() {
+		Validator.validateSourcePath(folder.getRoot().getAbsolutePath());
+	}
+	
+	/**
+	 * Poprawne zródło kiedy istnieje w nim plik
 	 * 
 	 * @throws IOException
 	 */
 	@Test
-	public void sourcPathExistsTest() throws IOException {
+	public void sourcShouldHaveFileTest() throws IOException {
+		
+		folder.newFile("test_one.jpg");
+		
 		Validator.validateSourcePath(folder.getRoot().getAbsolutePath());
 	}
 
 	/**
-	 * Make sure error is thrown when source dosen't exist.
+	 * Sprawdzenie błędu dla nie istniejacego zródła
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void sourcePathDosentExistTest() {
@@ -59,7 +82,7 @@ public class ValidatorTest {
 	}
 
 	/**
-	 * Make sure error is thrown when target dosen't exist.
+	 * Sprawdzenie błędu dla nie istniejacego celu
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void targetPathDosentExistTest() {
@@ -67,7 +90,7 @@ public class ValidatorTest {
 	}
 
 	/**
-	 * Make sures that errror is thrown when target directory is not empty.
+	 * Sprawdzenie błedu kiedy cel nie jest pusty
 	 * 
 	 * @throws IOException
 	 */
@@ -77,4 +100,25 @@ public class ValidatorTest {
 
 		Validator.validateTargetPath(folder.getRoot().getAbsolutePath());
 	}
+	
+	/**
+	 * Sprawdzenie przejscia dla poprawnej liczby 
+	 */
+	@Test
+	public void threadIsNumTest() {
+		String theads = "2";
+		
+		Validator.validateThreadNum(theads);
+	}
+	
+	/**
+	 * Sprawdzenie błędu dla liczby jako słowa
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void threadIsStringTest() {
+		String theads = "two";
+		
+		Validator.validateThreadNum(theads);
+	}
+	
 }
