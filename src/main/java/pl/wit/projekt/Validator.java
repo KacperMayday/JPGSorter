@@ -31,7 +31,8 @@ public class Validator {
 	}
 
 	/**
-	 * Checks the number of passed in arguments 
+	 * Checks the number of passed in arguments
+	 * 
 	 * @param size
 	 * @throws RuntimeException
 	 */
@@ -42,7 +43,8 @@ public class Validator {
 	}
 
 	/**
-	 * Ensures that the source path exits and is a directory
+	 * Ensures that the source path exits and is a directory.
+	 * 
 	 * @param path
 	 * @throws RuntimeException
 	 */
@@ -53,7 +55,8 @@ public class Validator {
 	}
 
 	/**
-	 * Ensures that target exits and is an empty director
+	 * Ensures that target exits and is an empty director.
+	 * 
 	 * @param path
 	 * @throws RuntimeException
 	 */
