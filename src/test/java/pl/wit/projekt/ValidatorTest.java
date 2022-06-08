@@ -21,7 +21,7 @@ public class ValidatorTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	/**
-	 * Przejście dla poprawnej ilości argumentow 
+	 * Przejście dla poprawnej ilości argumentow
 	 */
 	@Test
 	public void correctLengthTest() {
@@ -39,7 +39,7 @@ public class ValidatorTest {
 
 		Validator.validateLength(args.length);
 	}
-	
+
 	/**
 	 * Sprawdzenie błedu podczas zlej ilości - za dużo
 	 */
@@ -59,7 +59,7 @@ public class ValidatorTest {
 	public void sourcPathExistsTest() {
 		Validator.validateSourcePath(folder.getRoot().getAbsolutePath());
 	}
-	
+
 	/**
 	 * Poprawne zródło kiedy istnieje w nim plik
 	 * 
@@ -67,9 +67,9 @@ public class ValidatorTest {
 	 */
 	@Test
 	public void sourcShouldHaveFileTest() throws IOException {
-		
+
 		folder.newFile("test_one.jpg");
-		
+
 		Validator.validateSourcePath(folder.getRoot().getAbsolutePath());
 	}
 
@@ -100,25 +100,25 @@ public class ValidatorTest {
 
 		Validator.validateTargetPath(folder.getRoot().getAbsolutePath());
 	}
-	
+
 	/**
-	 * Sprawdzenie przejscia dla poprawnej liczby 
+	 * Sprawdzenie przejscia dla poprawnej liczby
 	 */
 	@Test
 	public void threadIsNumTest() {
 		String theads = "2";
-		
+
 		Validator.validateThreadNum(theads);
 	}
-	
+
 	/**
 	 * Sprawdzenie błędu dla liczby jako słowa
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void threadIsStringTest() {
 		String theads = "two";
-		
+
 		Validator.validateThreadNum(theads);
 	}
-	
+
 }
