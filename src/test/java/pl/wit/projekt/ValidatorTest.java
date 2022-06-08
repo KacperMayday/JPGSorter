@@ -1,14 +1,21 @@
 package pl.wit.projekt;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class ValidatorTest {
 
+	/**
+	 * Temp folder for running tests. Gets recreated with each run test.
+	 */
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+
+	/**
+	 * Ensure no error with correct number of arguments.
+	 */
 	@Test
 	public void correctLengthTest() {
 		String[] args = { "test", "test", "test" };
@@ -16,6 +23,9 @@ public class ValidatorTest {
 		Validator.validateLength(args.length);
 	}
 
+	/**
+	 * Ensure correct number of arguments.
+	 */
 	@Test(expected = RuntimeException.class)
 	public void wrongLengthTest() {
 		String[] args = { "test", "test" };
@@ -23,32 +33,41 @@ public class ValidatorTest {
 		Validator.validateLength(args.length);
 	}
 
+	/**
+	 * Make sure no error is thrown when source exists.
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void sourcPathExistsTest() throws IOException {
-		Path tempDir = Files.createTempDirectory("sourceTest");
-
-		Validator.validateSourcePath(tempDir.toAbsolutePath().toString());
+		Validator.validateSourcePath(folder.getRoot().getAbsolutePath());
 	}
 
+	/**
+	 * Make sure error is thrown when source dosen't exist.
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void sourcePathDosentExistTest() {
 		Validator.validateSourcePath("random/non/existent/source/path");
 	}
 
+	/**
+	 * Make sure error is thrown when target dosen't exist.
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void targetPathDosentExistTest() {
 		Validator.validateTargetPath("random/non/existent/target/path");
 	}
 
+	/**
+	 * Make sures that errror is thrown when target directory is not empty.
+	 * 
+	 * @throws IOException
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void targetPathContainsFilesTest() throws IOException {
-		Path tempDir = Files.createTempDirectory("targetPath");
+		folder.newFile("test_one.jpg");
 
-		Path filename = Path.of(tempDir.toAbsolutePath().toString(), "temp_file.txt");
-
-		@SuppressWarnings("unused")
-		File tempFile = new File(filename.toString());
-
-		Validator.validateTargetPath(tempDir.toAbsolutePath().toString());
+		Validator.validateTargetPath(folder.getRoot().getAbsolutePath());
 	}
 }

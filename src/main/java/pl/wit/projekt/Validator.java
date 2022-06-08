@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * 
+ * Validator is used to check the correctness of input data to the program
+ * 
+ * @author Jakub Chrupek, 19245
+ *
+ */
 public class Validator {
 
 	/**
@@ -17,32 +24,47 @@ public class Validator {
 	 * @param args
 	 * @throws IOException
 	 */
-
 	public static void validate(String[] args) {
 		Validator.validateLength(args.length);
 		Validator.validateSourcePath(args[0]);
 		Validator.validateTargetPath(args[1]);
 	}
 
+	/**
+	 * Checks the number of passed in arguments 
+	 * @param size
+	 * @throws RuntimeException
+	 */
 	public static void validateLength(int size) throws RuntimeException {
 		if (size != 3) {
 			throw new IllegalArgumentException("Please provide three arguments");
 		}
 	}
 
+	/**
+	 * Ensures that the source path exits and is a directory
+	 * @param path
+	 * @throws RuntimeException
+	 */
 	public static void validateSourcePath(String path) throws RuntimeException {
 		if (!Files.isDirectory(Paths.get(path))) {
 			throw new IllegalArgumentException("Source path should exit and should be a directory");
 		}
 	}
 
-	public static void validateTargetPath(String path) throws RuntimeException{
+	/**
+	 * Ensures that target exits and is an empty director
+	 * @param path
+	 * @throws RuntimeException
+	 */
+	public static void validateTargetPath(String path) throws RuntimeException {
 		if (!Files.isDirectory(Paths.get(path))) {
 			throw new IllegalArgumentException("Target path should exit");
 		}
 
 		try {
-			if (!Files.list(Paths.get(path)).findAny().isPresent()) {
+			// Check for presents of any file
+			if (Files.list(Paths.get(path)).findAny().isPresent()) {
 				throw new IllegalArgumentException("Target should be a empty directory");
 			}
 		} catch (IOException e) {
