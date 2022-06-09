@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"pl.wit.projekt","l":"App"},{"p":"pl.wit.projekt","l":"CopyThread"},{"p":"pl.wit.projekt","l":"JPGScanner"},{"p":"pl.wit.projekt","l":"JPGUtility"},{"p":"pl.wit.projekt","l":"Validator"}];updateSearchResults();
