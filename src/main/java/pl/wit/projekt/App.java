@@ -1,27 +1,44 @@
 package pl.wit.projekt;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Paths;
 
+/**
+ * Klasa główna aplikacji
+ *
+ * @author Jakub Chrupek, 19245
+ */
 public class App {
 	/**
-	 * parsowanie argumentów (wraz z ich walidacją) i uruchomienie głównej klasy
-	 * JPGUtility
-	 *
+	 * parsowanie argumentów (wraz z ich walidacją), skanowanie folderu docelowego
+	 * i współbieżne kopiowanie plików .jpg
 	 */
 	public static void main(String[] args) {
-		// robocza inicjalizacja parametrów
-		int threadPool = 0;
-		String sourcePath = "";
-		String targetPath = "";
 
-		// flow
-		JPGScanner scanner = new JPGScanner(sourcePath);
-		Map<FileTime, List<Path>> mapa = scanner.getMetadata();
+		Validator.validate(args);
 
-		JPGUtility utility = new JPGUtility(threadPool, Path.of(targetPath));
-		utility.copyFiles(mapa);
+		Path sourcePath = Paths.get(args[0]);
+		Path targetPath = Paths.get(args[1]);
+		int threadPool = Integer.parseInt(args[2]);
+
+		JPGScanner scanner = new JPGScanner();
+
+		if (scanner != null) {
+			try {
+				scanner.scanDirectory(sourcePath);
+			} catch (IOException e) {
+				System.out.println("error occurred while scanning for source files: " + e);
+				System.exit(1);
+			}
+		}
+
+		JPGUtility utility = new JPGUtility(threadPool, targetPath);
+		try {
+			utility.copyFiles(scanner.getMetadata());
+		} catch (IOException e) {
+			System.out.println("error occurred while copying files from source to target: " + e);
+			System.exit(1);
+		}
 	}
 }

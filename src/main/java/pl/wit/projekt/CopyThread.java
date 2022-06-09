@@ -35,7 +35,7 @@ public class CopyThread implements Runnable {
 	public void run() {
 		Path targetPath;
 		synchronized (mapFolders) {
-			 targetPath = getFilePath();
+			targetPath = getFilePath();
 		}
 		try {
 			Files.copy(source, targetPath);
