@@ -73,7 +73,9 @@ public class JPGUtilityTest {
 		cleanDirectory(new File(targetPath.toString()));
 
 		// mapa plików do skopiowania
-		mapMetaFilenames = Map.of(LocalDate.parse("2022-06-05"), List.of(sourcePath.resolve("test_image1.jpg")));
+		mapMetaFilenames = Map.of(
+				LocalDate.parse("2022-06-08"), List.of(sourcePath.resolve("test_image1.jpg"), sourcePath.resolve("test_image2.jpg")),
+				LocalDate.parse("2022-06-09"), List.of(sourcePath.resolve("test_image2.jpg")));
 	}
 
 	/**
