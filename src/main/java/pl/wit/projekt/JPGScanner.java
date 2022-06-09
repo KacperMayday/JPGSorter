@@ -16,34 +16,27 @@ import java.time.ZoneId;
 
 /**
  * 
- * JPGScanner is used to scan directories for .jpg files. It stores search
- * results inside of a map.
- * 
+ * Klasa skanująca katalog zródłowy mapując pliki .jpg
+ *
  * @author Jakub Chrupek, 19245
  *
  */
 public class JPGScanner {
 
-	/**
-	 * Used for storing creation time associated with file path
-	 */
-	private Map<LocalDate, List<Path>> filesMetadata;
+	// mapa przechowująca listę ścieżek do plików dla poszczególnych dat utworzenia
+	private final Map<LocalDate, List<Path>> filesMetadata;
 
 	/**
-	 * Initiates the concurete HashMap
-	 * 
-	 * @param path
-	 * @throws IOException
+	 * Inicjalizacja mapy
 	 */
 	public JPGScanner() {
 		filesMetadata = new HashMap<>();
 	}
 
 	/**
-	 * Scans the passed in directory for .jpg files and saves thier creation time to
-	 * a instances Map.
+	 * Metoda skanująca podany katalog w poszukiwaniu plików .jpg i mapuje je z podziałem na daty utworzenia
 	 * 
-	 * @param path
+	 * @param path ścieżka katalogu do skanowania
 	 * @throws IOException
 	 */
 	public void scanDirectory(Path path) throws IOException {
@@ -92,9 +85,8 @@ public class JPGScanner {
 	}
 
 	/**
-	 * Returns the map containing file Paths assosiated with LocalTime
-	 * 
-	 * @return filesMeta instance variable
+	 * Getter filesMetadata
+	 * @return
 	 */
 	public Map<LocalDate, List<Path>> getMetadata() {
 		return this.filesMetadata;

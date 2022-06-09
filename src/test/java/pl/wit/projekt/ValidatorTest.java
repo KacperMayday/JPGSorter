@@ -52,11 +52,9 @@ public class ValidatorTest {
 
 	/**
 	 * Test błedu dla pustej ścieżki
-	 * 
-	 * @throws IOException
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void sourcPathExistsTest() {
+	public void sourcePathExistsTest() {
 		Validator.validateSourcePath(folder.getRoot().getAbsolutePath());
 	}
 
@@ -77,7 +75,7 @@ public class ValidatorTest {
 	 * Sprawdzenie błędu dla nie istniejacego zródła
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void sourcePathDosentExistTest() {
+	public void sourcePathDoesNotExistTest() {
 		Validator.validateSourcePath("random/non/existent/source/path");
 	}
 
@@ -85,7 +83,7 @@ public class ValidatorTest {
 	 * Sprawdzenie błędu dla nie istniejacego celu
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void targetPathDosentExistTest() {
+	public void targetPathDoesNotExistTest() {
 		Validator.validateTargetPath("random/non/existent/target/path");
 	}
 
@@ -106,9 +104,9 @@ public class ValidatorTest {
 	 */
 	@Test
 	public void threadIsNumTest() {
-		String theads = "2";
+		String threads = "2";
 
-		Validator.validateThreadNum(theads);
+		Validator.validateThreadNum(threads);
 	}
 
 	/**
@@ -116,9 +114,19 @@ public class ValidatorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void threadIsStringTest() {
-		String theads = "two";
+		String threads = "two";
 
-		Validator.validateThreadNum(theads);
+		Validator.validateThreadNum(threads);
+	}
+
+	/**
+	 * Sprawdzenie błędu dla liczby mniejszej od 1
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void threadIsLesserThanOneTest() {
+		String threads = "0";
+
+		Validator.validateThreadNum(threads);
 	}
 
 }

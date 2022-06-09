@@ -26,7 +26,6 @@ public class Validator {
 	 * 4. Ilośc watków powinna być liczbą
 	 * 
 	 * @param args
-	 * @throws IOException
 	 */
 	public static void validate(String[] args) {
 		Validator.validateLength(args.length);
@@ -103,6 +102,8 @@ public class Validator {
 
 		try {
 			int d = Integer.parseInt(num);
+			if (d < 1)
+				throw new IllegalArgumentException("Thread num should be greater than 0");
 		} catch (NumberFormatException n) {
 			throw new IllegalArgumentException("Thread num should be an integer");
 		}
